@@ -1,4 +1,3 @@
--- Aimbot.lua - toggleable module; locks camera to nearest player while holding RMB
 local Players = game:GetService("Players")
 local UIS = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
@@ -11,10 +10,10 @@ local holding = false
 local connStepped, connBegan, connEnded
 
 local CONFIG = {
-    MaxDistance = 250,         -- lock range in studs
-    LockPartName = "Head",     -- aim at this body part
-    TeamCheck = true,          -- ignore teammates
-    Smoothness = 0.25,         -- 0 = instant snap, 0.25 = gentle tracking
+    MaxDistance = 250,         
+    LockPartName = "Head",     
+    TeamCheck = true,          
+    Smoothness = 0.25,         
 }
 
 local function isEnemy(plr)
