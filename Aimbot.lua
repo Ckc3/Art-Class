@@ -1,11 +1,11 @@
 
 local INCLUDE_PLAYERS = true
-local INCLUDE_NPCS = false             
+local INCLUDE_NPCS = true
 local MAX_DISTANCE = 1500              
 local REQUIRE_LINE_OF_SIGHT = false    
 local SMOOTHNESS = 0.25                
 local HEAD_OFFSET = Vector3.new(0, 0.1, 0)
-local MAX_FOV_DEG = 20                 
+local MAX_FOV_DEG = 20                
 
 
 local Players = game:GetService("Players")
@@ -67,7 +67,7 @@ local function distance(a, b)
     return (a - b).Magnitude
 end
 
-
+-- LOS check
 local function hasLineOfSight(fromPos, toPart)
     if not toPart or not toPart:IsA("BasePart") then return false end
     local params = RaycastParams.new()
@@ -83,7 +83,7 @@ local function hasLineOfSight(fromPos, toPart)
     return result == nil
 end
 
-
+-- NPC tracking
 local npcs = {}
 
 local function tryAddNPC(model)
@@ -170,7 +170,7 @@ local function findNearestTarget()
     if INCLUDE_PLAYERS then
         for _, p in ipairs(Players:GetPlayers()) do
             if p ~= LocalPlayer then
-                consider(getCharacter(p)) 
+                consider(getCharacter(p))
             end
         end
     end
@@ -234,6 +234,7 @@ local function updateAim()
 end
 
 local function lockOn()
+    if locking then return end
     currentTarget = findNearestTarget()
     if not currentTarget then return end
     locking = true
@@ -249,11 +250,13 @@ end
 UserInputService.InputBegan:Connect(function(input, gp)
     if gp then return end
     if input.UserInputType == Enum.UserInputType.MouseButton2 then
-        if locking then
-            unlock()
-        else
-            lockOn()
-        end
+        lockOn()
+    end
+end)
+
+UserInputService.InputEnded:Connect(function(input, gp)
+    if input.UserInputType == Enum.UserInputType.MouseButton2 then
+        unlock()
     end
 end)
 
